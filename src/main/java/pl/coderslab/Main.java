@@ -1,6 +1,7 @@
 package pl.coderslab;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -18,21 +19,27 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
 
-        //String[] dataFromLibrary = getDataFromLibrary();
+
 
 
 
         while (isWhileRunning){
+            String[] data = getDataFromLibrary();
             printOptions();
             String command = scanner.nextLine();
             if( command.equals("add")){
                 add();
             } else if (command.equals("remove")) {
-                // TODO remove metod
+                if ( data.length > 1) {
+                    remove();
+                } else {
+                    System.out.println("There is nothing to remove");
+                }
             } else if (command.equals("list")) {
                 list();
             } else if (command.equals("exit")) {
                 isWhileRunning = false;
+                System.out.println(ConsoleColors.RED + "Bye, bye");
             } else {
                 System.out.println(ConsoleColors.RED + "Please pick correct command!" + ConsoleColors.RESET);
             }
@@ -117,7 +124,7 @@ public class Main {
 
     public static void list(){
         String[] data = getDataFromLibrary();
-        if( data[0].equals("0 ")){
+        if( data[0].equals("0 ") || data[0].equals("0")){
             System.out.println("List is empty");
         } else {
             for (int i = 0; i < data.length -1; i++){
@@ -125,6 +132,59 @@ public class Main {
             }
         }
     }
+
+    public static void remove(){
+        String[] data = getDataFromLibrary();
+        Scanner scanner = new Scanner(System.in);
+        Path path = Paths.get(fileName);
+        int whichLineParsed = -1;
+        boolean wrongInput = true;
+
+
+
+        System.out.println("Please select number to remove.");
+        while (wrongInput){
+            String whichLine = scanner.nextLine();
+        if (NumberUtils.isParsable(whichLine)){
+            whichLineParsed = Integer.parseInt(whichLine);
+        }
+        if( whichLineParsed >= 0 && whichLineParsed < data.length){
+            wrongInput = false;
+        }
+        if( wrongInput) {
+            System.out.println("Incorrect argument passed. Try again");
+        }
+
+
+        if ( whichLineParsed < data.length - 1 && whichLineParsed > 0){
+            try {
+                Files.writeString( path, data[0] + "\n");
+                for (int i = 1; i < whichLineParsed; i++){
+                    Files.writeString(path, data[i] + "\n", StandardOpenOption.APPEND);
+                }
+                for (int i = whichLineParsed + 1 ; i < data.length; i++){
+                    Files.writeString(path, i - 1 + data[i].substring(1) + "\n",StandardOpenOption.APPEND);
+                }
+                System.out.println("Value was successfully removed");
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else if ( whichLineParsed == 0){
+            try {
+                Files.writeString(path, "0" + data[1].substring(1) + "\n");
+                for (int i = whichLineParsed + 2; i < data.length; i++) {
+                    Files.writeString(path, i - 1 + data[i].substring(1) + "\n", StandardOpenOption.APPEND);
+                }
+                System.out.println("Value was successfully removed");
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        }
+        }
 
 
 }
