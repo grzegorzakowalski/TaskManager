@@ -27,7 +27,7 @@ public class Main {
                 }
                 case "remove" -> {
                     int taskNumber = Menu.getTaskNumberFromUser();
-                    if (taskNumber > 0 && taskNumber < tableControl.getLength()) {
+                    if (taskNumber >= 0 && taskNumber < tableControl.getLength()) {
                         tableControl.removeTask(taskNumber);
                         FileWriter.writeTableToFile(tableControl.getFileArray());
                         Menu.removedCorectly();

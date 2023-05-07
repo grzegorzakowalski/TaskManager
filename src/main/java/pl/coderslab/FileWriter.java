@@ -7,7 +7,7 @@ import java.nio.file.StandardOpenOption;
 public class FileWriter extends FileControl {
 
     public static void writeTableToFile(String[] array){
-        if( array != null){
+        if( array != null && array.length > 0){
             try {
                 Files.writeString(path, array[0] + "\n");
             } catch (IOException e) {
@@ -21,6 +21,12 @@ public class FileWriter extends FileControl {
                         throw new RuntimeException(e);
                     }
                 }
+            }
+        } else {
+            try {
+                Files.writeString(path,"null");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
 

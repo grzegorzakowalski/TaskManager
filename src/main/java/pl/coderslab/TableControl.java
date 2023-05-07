@@ -28,14 +28,23 @@ public class TableControl {
     }
 
     public void addTask(String task){
-        String[] newArray = Arrays.copyOf(fileArray, fileArray.length + 1);
-        newArray[newArray.length -1] = task;
-        fileArray = newArray;
+        if( fileArray[0].equals("null")){
+            fileArray[0] = task;
+        } else {
+
+            String[] newArray = Arrays.copyOf(fileArray, fileArray.length + 1);
+            newArray[newArray.length - 1] = task;
+            fileArray = newArray;
+        }
     }
 
     public void printFileArray(){
-        for (int i = 0; i < fileArray.length; i++) {
-            System.out.println(String.format("%s : %s",i, fileArray[i]));
+        if( fileArray[0].equals("null")){
+            System.out.println("List is empty");
+        }else {
+            for (int i = 0; i < fileArray.length; i++) {
+                System.out.println(String.format("%s : %s", i, fileArray[i]));
+            }
         }
     }
 
