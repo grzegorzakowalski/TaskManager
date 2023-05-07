@@ -11,6 +11,7 @@ public class FileControl {
         if(!Files.exists(path)){
             try {
                 Files.createFile(path);
+                Files.writeString(path,"null");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
